@@ -10,12 +10,31 @@ namespace MyServer.Services
             _logger = logger;
         }
 
-        public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
+        public override async Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
         {
-            return Task.FromResult(new HelloReply
+            await Task.Delay(500);
+
+            return new HelloReply
             {
-                Message = "Hello " + request.Name
-            });
+                Message = "Hello from gRPC Server : Hi " + request.Name
+            };
+        }
+
+        public override async Task<HelloReplyList> SayHelloList(HelloRequest request, ServerCallContext context)
+        {
+            var list = new HelloReplyList();
+
+            await Task.Delay(500);
+
+            for (int i = 0; i < 5; i++)
+            {
+                list.List.Add(new HelloReply
+                {
+                    Message = $"Hello {i}"
+                });
+            }
+
+            return list;
         }
     }
 }
